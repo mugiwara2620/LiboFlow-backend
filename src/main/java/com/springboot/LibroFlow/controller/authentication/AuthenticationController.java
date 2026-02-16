@@ -1,6 +1,7 @@
 package com.springboot.LibroFlow.controller.authentication;
 
 import com.springboot.LibroFlow.entity.User;
+import com.springboot.LibroFlow.request.RefreshTokenRequest;
 import com.springboot.LibroFlow.request.SigningRequest;
 import com.springboot.LibroFlow.request.SignupRequest;
 import com.springboot.LibroFlow.response.ApiResponse;
@@ -43,6 +44,14 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(authenticationService.signIn(request), "Username signin")) ;
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(null, "Username or password incorrect"));
+        }
+    }
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponse> refresh(@RequestBody RefreshTokenRequest request){
+        try{
+            return ResponseEntity.ok(new ApiResponse(authenticationService.jwtRefreshToken(request),"Token refreshed successfully"));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body( new ApiResponse(null,"Account not founded!")) ;
         }
     }
 }

@@ -3,6 +3,7 @@ package com.springboot.LibroFlow.service.authentication;
 import com.springboot.LibroFlow.emun.Role;
 import com.springboot.LibroFlow.entity.User;
 import com.springboot.LibroFlow.repository.UserRepository;
+import com.springboot.LibroFlow.request.RefreshTokenRequest;
 import com.springboot.LibroFlow.request.SigningRequest;
 import com.springboot.LibroFlow.request.SignupRequest;
 import com.springboot.LibroFlow.response.AuthenticationResponse;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -32,13 +34,12 @@ public class AuthenticationService implements IAuthenticationService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         UserDetails user = userService.loadUserByUsername(request.getEmail());
         String token  = jwtService.generateToke(user);
-        String refreshToken = jwtService.generateRefreshToke(user);
-        return new AuthenticationResponse(token,refreshToken);
+        var refreshToken = jwtService.generateRefreshToke( user);
+        return new AuthenticationResponse(token, refreshToken);
     }
 
     @Override
     public User signUpToUserAccount(SignupRequest request) {
-//        if(!userService.isUserNameValid(request.getFirstName())){
             User user = new User();
             user.setEmail(request.getEmail());
             user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -65,6 +66,19 @@ public class AuthenticationService implements IAuthenticationService {
     @Override
     public boolean checkIfUsernameExists(String username) {
         return userRepository.findByEmail(username) != null;
+    }
+
+    @Override
+    public AuthenticationResponse jwtRefreshToken(RefreshTokenRequest request){
+        String username = jwtService.extractUsername(request.getRefreshToken());
+        User user = userRepository.findByEmail(username);
+        if(jwtService.isValidToken(user, request.getRefreshToken())){
+            var newToken = jwtService.generateToke(user);
+
+            return new AuthenticationResponse(newToken, request.getRefreshToken());
+        }else{
+            return null;
+        }
     }
 
 }

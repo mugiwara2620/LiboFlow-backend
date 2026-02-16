@@ -1,6 +1,7 @@
 package com.springboot.LibroFlow.config.security;
 
 import com.springboot.LibroFlow.config.JwtAuthenticationFilter;
+import com.springboot.LibroFlow.emun.Role;
 import com.springboot.LibroFlow.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -35,8 +38,8 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers("/api/v1/**","/home").permitAll()
-                        .requestMatchers("/admin").hasRole("ADMIN")
-                        .requestMatchers("/user").hasRole("USER")
+                        .requestMatchers("/admin").hasAuthority(Role.ADMIN.name())
+                        .requestMatchers("/user").hasAnyAuthority(Role.ADMIN.name(),Role.USER.name())
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
