@@ -1,4 +1,4 @@
-package com.springboot.LibroFlow.emun;
+package com.springboot.LibroFlow.enums;
 
 public enum Role {
     ADMIN,USER,MANAGER

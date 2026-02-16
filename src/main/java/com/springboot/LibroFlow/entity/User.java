@@ -1,6 +1,6 @@
 package com.springboot.LibroFlow.entity;
 
-import com.springboot.LibroFlow.emun.Role;
+import com.springboot.LibroFlow.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @RequiredArgsConstructor
@@ -25,12 +26,15 @@ public class User implements UserDetails {
     private String email;
     private String password;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+            {CascadeType.PERSIST,  CascadeType.MERGE})
+
+    private Set<BookItem> books;
+
     private List<Role> role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // We wrap the role name in a SimpleGrantedAuthority object
-        // Spring Security convention usually expects roles to start with "ROLE_"
         return role.stream().map(role-> new SimpleGrantedAuthority(role.name())).toList();
     }
 

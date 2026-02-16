@@ -1,6 +1,6 @@
 package com.springboot.LibroFlow.service.authentication;
 
-import com.springboot.LibroFlow.emun.Role;
+import com.springboot.LibroFlow.enums.Role;
 import com.springboot.LibroFlow.entity.User;
 import com.springboot.LibroFlow.repository.UserRepository;
 import com.springboot.LibroFlow.request.RefreshTokenRequest;
@@ -16,7 +16,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Service
