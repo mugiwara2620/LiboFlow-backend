@@ -37,7 +37,7 @@ public class BookService implements IBookService {
 
     @Override
     public void removeBookByNameAndAuthor(String title, String author) {
-        Book book = bookRepository.findByAuthorAndTitle(title, author);
+        Book book = bookRepository.findByAuthorAndTitle(author, title);
         bookRepository.delete(book);
     }
 
@@ -57,5 +57,10 @@ public class BookService implements IBookService {
     public boolean isBookExists(String author, String title) {
         Book book = bookRepository.findByAuthorAndTitle(author,title);
         return book!=null;
+    }
+
+    @Override
+    public Book getBookById(Long id) {
+        return bookRepository.findById(id).orElse(null);
     }
 }

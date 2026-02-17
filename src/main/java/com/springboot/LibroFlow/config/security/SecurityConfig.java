@@ -35,9 +35,9 @@ public class SecurityConfig {
                                 sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth->auth
-                        .requestMatchers("/api/v1/**","/home").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
-                        .requestMatchers("/user/**").hasAnyAuthority(Role.ADMIN.name(),Role.USER.name())
+                            .requestMatchers("/api/v1/auth/**","/home").permitAll()
+                        .requestMatchers("/api/v1/admin/**").hasAuthority(Role.ADMIN.name())
+                        .requestMatchers("/api/v1/user/**").hasAnyAuthority(Role.ADMIN.name(),Role.USER.name())
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

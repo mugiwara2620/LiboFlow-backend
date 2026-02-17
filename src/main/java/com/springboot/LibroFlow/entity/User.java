@@ -1,5 +1,6 @@
 package com.springboot.LibroFlow.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.springboot.LibroFlow.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -28,10 +29,13 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
             {CascadeType.PERSIST,  CascadeType.MERGE})
-
     private Set<BookItem> books;
 
     private List<Role> role;
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<BookItem> bookItems;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

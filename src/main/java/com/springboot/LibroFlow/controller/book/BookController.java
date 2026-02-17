@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/admin/book")
+@RequestMapping("api/v1/")
 public class BookController {
-    private final BookRepository bookRepository;
     private final BookService bookService;
 
     @GetMapping("/all")
@@ -28,23 +27,23 @@ public class BookController {
         }
     }
 
-    @PostMapping("/add")
+    @PostMapping("/user/book/admin/book/add")
     private  ResponseEntity<ApiResponse> addBook(@RequestBody AddBookRequest request) {
         if (bookService.isBookExists(request.getAuthor(), request.getTitle())) {
             return new ResponseEntity<>(new ApiResponse(null,"Book already exists"),HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(new ApiResponse(bookService.addNewBook(request),"Book added successfully"),HttpStatus.CREATED) ;
     }
-    @DeleteMapping("/delete/{author}/{title}")
-    private ResponseEntity<ApiResponse> removeBook(@RequestParam String title, @RequestParam String author) {
+    @DeleteMapping("/admin/book/delete/{author}/{title}")
+    private ResponseEntity<ApiResponse> removeBook(@PathVariable String title, @PathVariable String author) {
         if(bookService.isBookExists(author, title)) {
-            bookService.removeBookByNameAndAuthor(author,title);
+            bookService.removeBookByNameAndAuthor(title,author);
             return new ResponseEntity<>(new ApiResponse(null,title + " by "+ author+ " was removed successfully"),HttpStatus.OK);
         }else{
             return new ResponseEntity<>(new ApiResponse(null,title + " not found"),HttpStatus.NOT_FOUND);
         }
     }
-    @GetMapping("/author/{author}")
+    @GetMapping("/user/book/author/{author}")
     public ResponseEntity<ApiResponse> getBookByAuthor(@PathVariable String author) {
         if(bookService.getBooksByAuthor(author) == null || bookService.getBooksByAuthor(author).isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
