@@ -66,6 +66,7 @@ public class JwtService implements IJwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+
     private boolean isTokenExpired(String token) {
         try {
             return extractClaim(token, Claims::getExpiration).before(new Date());

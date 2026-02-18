@@ -1,6 +1,8 @@
 package com.springboot.LibroFlow.controller.book;
 
 import com.springboot.LibroFlow.dto.BookItemDto;
+import com.springboot.LibroFlow.entity.BookItem;
+import com.springboot.LibroFlow.entity.User;
 import com.springboot.LibroFlow.response.ApiResponse;
 import com.springboot.LibroFlow.service.bookItem.BookItemService;
 import lombok.RequiredArgsConstructor;
@@ -68,5 +70,12 @@ public class BookItemController {
                 bookItemService.getBookItemsByUserId(userId)
         );
         return ResponseEntity.ok(bookItems);
+    }
+
+    @GetMapping("/user/{userId}/all")
+    public ResponseEntity<List<BookItemDto>> getAllUserBooks(@PathVariable Long userId) {
+        List< BookItem > bookItems = bookItemService.getBookItemsByUserId(userId);
+        List<BookItemDto> bookItemDtos = bookItemService.converteToBookItemDtoList(bookItems);
+        return ResponseEntity.ok(bookItemDtos);
     }
 }

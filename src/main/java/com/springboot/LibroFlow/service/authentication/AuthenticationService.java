@@ -34,7 +34,8 @@ public class AuthenticationService implements IAuthenticationService {
         UserDetails user = userService.loadUserByUsername(request.getEmail());
         String token  = jwtService.generateToke(user);
         var refreshToken = jwtService.generateRefreshToke( user);
-        return new AuthenticationResponse(token, refreshToken);
+        String role = user.getAuthorities().size() == 2 ? "admin" : "user";
+        return new AuthenticationResponse(token, refreshToken, role);
     }
 
     @Override
@@ -73,8 +74,8 @@ public class AuthenticationService implements IAuthenticationService {
         User user = userRepository.findByEmail(username);
         if(jwtService.isValidToken(user, request.getRefreshToken())){
             var newToken = jwtService.generateToke(user);
-
-            return new AuthenticationResponse(newToken, request.getRefreshToken());
+            String role = user.getAuthorities().size() == 2 ? "admin" : "user";
+            return new AuthenticationResponse(newToken, request.getRefreshToken(),role);
         }else{
             return null;
         }

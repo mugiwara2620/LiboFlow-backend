@@ -23,11 +23,11 @@ public class BookController {
                     .body(new ApiResponse(null,"No Books available"));
         }else{
             return ResponseEntity.ok()
-                    .body(new ApiResponse(bookService.getAllBooks(),"No Books available"));
+                    .body(new ApiResponse(bookService.getAllBooks(),"Get all books successfully"));
         }
     }
 
-    @PostMapping("/user/book/admin/book/add")
+    @PostMapping("/admin/book/add")
     private  ResponseEntity<ApiResponse> addBook(@RequestBody AddBookRequest request) {
         if (bookService.isBookExists(request.getAuthor(), request.getTitle())) {
             return new ResponseEntity<>(new ApiResponse(null,"Book already exists"),HttpStatus.CONFLICT);
