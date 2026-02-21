@@ -27,29 +27,26 @@ function SignUpPage() {
     setError("");
 
     try {
-      // Basic Validation
       if (!fullName || !email || !password || !confirmPassword) {
         throw new Error("Please fill in all fields.");
       }
+
       if (password !== confirmPassword) {
         throw new Error("Passwords do not match.");
       }
 
-      // Logic to determine endpoint based on role
       const endpointPath = role === "ROLE_ADMIN" ? "admin" : "user";
 
-      const response = await axios.post(
+      await axios.post(
         `http://localhost:8080/api/v1/auth/${endpointPath}/signup`,
         {
           firstName: fullName,
-          email: email,
-          password: password,
-          role: role,
+          email,
+          password,
+          role,
         },
       );
 
-      console.log("Signup Success:", response.data);
-      // Redirect to login on success
       navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || err.message || "Signup failed.");
@@ -59,46 +56,37 @@ function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 px-4 py-12 relative overflow-hidden">
-      {/* Dynamic Background Elements */}
-      <div className="absolute top-0 -left-10 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-0 -right-10 w-96 h-96 bg-black/10 rounded-full blur-3xl animate-pulse"></div>
-
-      <div className="max-w-lg w-full backdrop-blur-xl bg-white/95 rounded-3xl shadow-2xl p-8 md:p-10 z-10 border border-white/20">
-        {/* Header Section */}
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-lg bg-white border border-gray-200 rounded-3xl shadow-sm p-8 sm:p-10">
+        {/* Back Button */}
         <button
           onClick={() => navigate("/")}
-          className="group flex items-center text-sm font-semibold text-gray-400 hover:text-indigo-600 transition-colors mb-8"
+          className="flex items-center text-sm font-semibold text-gray-400 hover:text-indigo-600 transition-colors mb-8"
         >
-          <ArrowLeft
-            size={18}
-            className="mr-2 group-hover:-translate-x-1 transition-transform"
-          />
+          <ArrowLeft size={18} className="mr-2" />
           Back to login
         </button>
 
+        {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-tr from-indigo-600 to-purple-600 rounded-2xl shadow-xl shadow-indigo-200 mb-6 text-white rotate-3">
-            <UserPlus size={32} />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-2xl mb-5">
+            <UserPlus size={28} className="text-indigo-600" />
           </div>
-          <h2 className="text-4xl font-black text-gray-900 tracking-tight">
-            Join Us
-          </h2>
-          <p className="text-gray-500 mt-2 font-medium">
-            Create your library account in seconds
-          </p>
+
+          <h2 className="text-3xl font-bold text-indigo-600">Create Account</h2>
+          <p className="text-gray-500 mt-2">Join the library system</p>
         </div>
 
-        <div className="space-y-5">
-          {/* Full Name Input */}
-          <div className="group">
-            <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+        <div className="space-y-6">
+          {/* Full Name */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               Full Name
             </label>
-            <div className="relative mt-1.5">
-              <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-indigo-500 transition-colors" />
+            <div className="relative">
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
-                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
+                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                 placeholder="Enter your name"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
@@ -106,16 +94,16 @@ function SignUpPage() {
             </div>
           </div>
 
-          {/* Email Input */}
-          <div className="group">
-            <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               Email Address
             </label>
-            <div className="relative mt-1.5">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-indigo-500 transition-colors" />
+            <div className="relative">
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
-                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
                 type="email"
+                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -123,32 +111,33 @@ function SignUpPage() {
             </div>
           </div>
 
-          {/* Password Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="group">
-              <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+          {/* Passwords */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Password
               </label>
-              <div className="relative mt-1.5">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-indigo-500 transition-colors" />
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
-                  className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
                   type="password"
+                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
             </div>
-            <div className="group">
-              <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Confirm
               </label>
-              <div className="relative mt-1.5">
-                <CheckCircle2 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-indigo-500 transition-colors" />
+              <div className="relative">
+                <CheckCircle2 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
-                  className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
                   type="password"
+                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                   placeholder="••••••••"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
@@ -157,62 +146,64 @@ function SignUpPage() {
             </div>
           </div>
 
-          {/* Role Segmented Switch */}
+          {/* Role Switch */}
           <div>
-            <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               Account Type
             </label>
-            <div className="mt-2 p-1.5 bg-gray-100 rounded-2xl flex relative h-12">
-              <div
-                className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white rounded-xl shadow-md transition-all duration-300 ease-out ${
-                  role === "ROLE_USER" ? "left-1.5" : "left-[calc(50%+3px)]"
-                }`}
-              />
+
+            <div className="flex bg-gray-100 rounded-xl p-1">
               <button
                 type="button"
                 onClick={() => setRole("ROLE_USER")}
-                className={`relative z-10 flex-1 flex items-center justify-center gap-2 text-sm font-bold transition-colors ${
-                  role === "ROLE_USER" ? "text-indigo-600" : "text-gray-500"
+                className={`flex-1 py-2 rounded-lg text-sm font-bold transition ${
+                  role === "ROLE_USER"
+                    ? "bg-white shadow text-indigo-600"
+                    : "text-gray-500"
                 }`}
               >
-                <User size={16} /> User
+                <User size={16} className="inline mr-1" /> User
               </button>
+
               <button
                 type="button"
                 onClick={() => setRole("ROLE_ADMIN")}
-                className={`relative z-10 flex-1 flex items-center justify-center gap-2 text-sm font-bold transition-colors ${
-                  role === "ROLE_ADMIN" ? "text-indigo-600" : "text-gray-500"
+                className={`flex-1 py-2 rounded-lg text-sm font-bold transition ${
+                  role === "ROLE_ADMIN"
+                    ? "bg-white shadow text-indigo-600"
+                    : "text-gray-500"
                 }`}
               >
-                <ShieldCheck size={16} /> Admin
+                <ShieldCheck size={16} className="inline mr-1" /> Admin
               </button>
             </div>
           </div>
 
-          {/* Error Message */}
+          {/* Error */}
           {error && (
-            <div className="p-4 rounded-2xl bg-red-50 border border-red-100 animate-shake">
-              <p className="text-sm text-red-600 text-center font-bold tracking-tight">
+            <div className="p-4 rounded-xl bg-red-50 border border-red-200">
+              <p className="text-sm text-red-600 font-semibold text-center">
                 {error}
               </p>
             </div>
           )}
 
-          {/* Submit Button */}
+          {/* Submit */}
           <button
             onClick={handleSignup}
             disabled={loading}
-            className="w-full bg-gray-900 hover:bg-black text-white font-extrabold py-4 rounded-2xl transition-all shadow-xl shadow-gray-200 active:scale-[0.97] disabled:opacity-70 mt-4 flex items-center justify-center gap-3 group"
+            className={`w-full py-3 rounded-xl font-bold text-white transition-all ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-indigo-200"
+            } flex items-center justify-center gap-2`}
           >
             {loading ? (
               <Loader2 className="animate-spin" />
             ) : (
               <>
-                Get Started
-                <ArrowLeft
-                  size={20}
-                  className="rotate-180 group-hover:translate-x-1 transition-transform"
-                />
+                Create Account
+                <ArrowLeft size={18} className="rotate-180" />
               </>
             )}
           </button>

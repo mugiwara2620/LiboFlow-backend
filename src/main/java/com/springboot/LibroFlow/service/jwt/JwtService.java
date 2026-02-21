@@ -33,6 +33,7 @@ public class JwtService implements IJwtService {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
+                .claim("role",userDetails.getAuthorities().iterator().next().getAuthority())
                 .signWith(getJwtKey())
                 .compact();
     }

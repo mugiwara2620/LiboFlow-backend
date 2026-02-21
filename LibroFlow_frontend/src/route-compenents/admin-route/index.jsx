@@ -1,9 +1,15 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../../contex/AuthContext";
 
-const AdminRoute = ({ auth, children }) => {
-  if (!auth.isAdmin) return <Navigate to={"/acces-denied"} />;
-  return children;
+const AdminRoute = () => {
+  const { isAdmin, loading } = useAuth();
+
+  if (loading) return null; // or spinner
+
+  if (!isAdmin) return <Navigate to="/acces-denied" replace />;
+
+  return <Outlet />;
 };
 
 export default AdminRoute;

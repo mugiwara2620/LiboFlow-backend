@@ -1,10 +1,12 @@
 import React from "react";
 import { ShieldAlert, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contex/AuthContext";
 
 const AccessDenied = () => {
   const navigate = useNavigate();
-
+  const { isAdmin } = useAuth();
+  console.log(isAdmin);
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
       <div className="max-w-md w-full bg-white rounded-[2.5rem] p-10 shadow-xl border border-gray-100 text-center">

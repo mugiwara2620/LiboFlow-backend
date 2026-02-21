@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-@Table(name = "borrowBook")
+@Table(name = "borrow_book")
 @Entity
 public class BorrowBook {
     @Id
