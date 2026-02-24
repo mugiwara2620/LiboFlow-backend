@@ -29,9 +29,9 @@ public class User implements UserDetails {
 
     private List<Role> role;
 
-@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
-        {CascadeType.PERSIST,  CascadeType.MERGE})
-    private List<BookItem> bookItems;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+            {CascadeType.PERSIST,  CascadeType.MERGE})
+        private List<BookItem> bookItems;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

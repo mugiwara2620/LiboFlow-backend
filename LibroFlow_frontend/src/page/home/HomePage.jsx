@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
-import { Menu, Search, Loader2, AlertCircle, BookOpen } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useAuth } from "../../contex/AuthContext";
+import { Loader2, AlertCircle } from "lucide-react";
 import axiosInstance from "../../utils/axiosInstance";
 import SideBar from "../../components/side-bar/SideBar";
+import MainHeader from "../../components/header/MainHeader";
+import BookCover from "../../components/home/BookCover";
 export default function LibraryPage() {
-  const navigate = useNavigate();
-  const { logout, isAdmin } = useAuth();
-
   const [author, setAuthor] = useState("");
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -59,13 +56,6 @@ export default function LibraryPage() {
     }
   };
 
-  const deleteBook = async (author, title) => {
-    await axiosInstance.delete(
-      `http://localhost:8080/api/v1/admin/book/delete/${author}/${title}`,
-    );
-    await fetchAllBooks();
-  };
-
   const handleSideBar = () => {
     setIsSidebarOpen(true);
   };
@@ -87,98 +77,13 @@ export default function LibraryPage() {
       )}
 
       {/* ================= HEADER ================= */}
-      <header className="sticky  top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
-        <div className="px-4 sm:px-6 lg:px-12">
-          <div className="flex items-center justify-between h-16 sm:h-20">
-            {/* LEFT */}
-            <div className="flex items-center gap-5">
-              {isAuth && (
-                <button
-                  onClick={handleSideBar}
-                  className="p-2 rounded-xl -ml-4 text-gray-600 hover:bg-gray-100 transition xl:hidden"
-                >
-                  <Menu size={22} />
-                </button>
-              )}
-
-              <h1 className="text-3xl sm:text-3xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                LibroFlow
-              </h1>
-            </div>
-
-            {/* DESKTOP SEARCH */}
-            <div className="hidden md:flex flex-1 justify-center px-6">
-              <form
-                onSubmit={handleSearch}
-                className="relative w-full max-w-lg"
-              >
-                <Search
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                  size={18}
-                />
-                <input
-                  value={author}
-                  onChange={(e) => {
-                    setAuthor(e.target.value);
-                  }}
-                  type="text"
-                  placeholder="Search by author..."
-                  className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-md focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 outline-none transition"
-                />
-                {/* <button type="submit">s</button> */}
-              </form>
-            </div>
-
-            {/* RIGHT */}
-            <div className="flex items-center gap-3">
-              {isAuth ? (
-                <NavLink
-                  to={"/profile"}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-100 transition"
-                >
-                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white flex items-center justify-center text-sm font-semibold shadow">
-                    {isAdmin ? "A" : "U"}
-                  </div>
-                  <span className="hidden sm:block text-sm font-medium text-gray-700">
-                    Profile
-                  </span>
-                </NavLink>
-              ) : (
-                <>
-                  <button
-                    onClick={() => navigate("/login")}
-                    className="hidden sm:inline-flex px-4 py-2 text-lg font-semibold text-gray-600 hover:text-indigo-600 transition"
-                  >
-                    Login
-                  </button>
-
-                  <button
-                    onClick={() => navigate("/signup")}
-                    className="px-4 py-2 text-lg font-semibold rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow hover:shadow-lg hover:scale-[1.02] active:scale-95 transition-all"
-                  >
-                    Sign Up
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* MOBILE SEARCH */}
-          <div className="md:hidden pb-4">
-            <form onSubmit={handleSearch} className="relative">
-              <Search
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                size={18}
-              />
-              <input
-                type="text"
-                placeholder="Search by author..."
-                className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 outline-none transition"
-              />
-            </form>
-          </div>
-        </div>
-      </header>
+      <MainHeader
+        handleSideBar={handleSideBar}
+        handleSearch={handleSearch}
+        isAuth={isAuth}
+        setAuth={setAuth}
+        author={author}
+      />
 
       {/* ================= CONTENT ================= */}
       <main className="px-4 sm:px-6 md:px-10 py-10">
@@ -207,65 +112,7 @@ export default function LibraryPage() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {books.map((book, idx) => (
-              <div
-                key={idx}
-                className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
-              >
-                {/* Cover */}
-                <div className="aspect-[3/4] group w-full bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl mb-4 flex items-center justify-center relative overflow-hidden">
-                  {!book.image ? (
-                    <BookOpen
-                      size={36}
-                      className="text-indigo-200 group-hover:opacity-20 transition-opacity"
-                    />
-                  ) : (
-                    <img
-                      src={`data:image/png;base64,${book.image}`}
-                      className="object-cover w-full h-full"
-                    />
-                  )}
-
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-indigo-600/90 flex flex-col items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition duration-300 p-4">
-                    <button className="w-full py-2 bg-white text-indigo-600 rounded-lg text-xs font-bold uppercase hover:bg-indigo-50 transition">
-                      Borrow
-                    </button>
-
-                    {isAdmin && (
-                      <button
-                        onClick={() => deleteBook(book.author, book.title)}
-                        className="w-full py-2 bg-red-500 text-white rounded-lg text-xs font-bold uppercase hover:bg-red-600 transition"
-                      >
-                        Delete
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Badge */}
-                  <div className="absolute top-3 left-3 px-2 py-1 bg-white/90 rounded-md text-xs font-bold text-indigo-600 border border-indigo-100 shadow-sm group-hover:hidden">
-                    {book.pages} Pages
-                  </div>
-                </div>
-
-                {/* Info */}
-                <div className="flex items-center gap-15">
-                  <div className="min-w-0">
-                    <h3 className="font-semibold text-gray-900 text-md line-clamp-1 group-hover:text-indigo-600 transition">
-                      {book.title}
-                    </h3>
-                    <p className="text-xs text-gray-500 truncate uppercase tracking-wide">
-                      {book.author}
-                    </p>
-                  </div>
-
-                  <button
-                    onClick={() => navigate(`/book/${book.id}`)}
-                    className="text-sm font-semibold text-indigo-600 hover:underline ml-3 whitespace-nowrap"
-                  >
-                    Details
-                  </button>
-                </div>
-              </div>
+              <BookCover fetchAllBooks={fetchAllBooks} book={book} idx={idx} />
             ))}
           </div>
         )}

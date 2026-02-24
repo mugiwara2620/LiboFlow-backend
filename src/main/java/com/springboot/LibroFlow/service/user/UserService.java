@@ -48,6 +48,7 @@ public class UserService implements UserDetailsService {
         userDto.setBooks(bookItemService.converteToBookItemDtoList(user.getBookItems()));
         return modelMapper.map(user, UserDto.class);
     }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
