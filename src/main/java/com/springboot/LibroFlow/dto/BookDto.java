@@ -1,6 +1,7 @@
 package com.springboot.LibroFlow.dto;
 
 import com.springboot.LibroFlow.entity.BookItem;
+import com.springboot.LibroFlow.entity.Image;
 import lombok.Data;
 
 @Data
@@ -11,4 +12,5 @@ public class BookDto {
     private String author;
     private String pages;
     private String description;
+    private String image;
 }

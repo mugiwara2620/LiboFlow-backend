@@ -27,14 +27,8 @@ public class User implements UserDetails {
     private String email;
     private String password;
 
-//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
-//            {CascadeType.PERSIST,  CascadeType.MERGE})
-//    private List<BookItem> books;
-
     private List<Role> role;
 
-//    @OneToMany(mappedBy = "user")
-//    @JsonManagedReference
 @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
         {CascadeType.PERSIST,  CascadeType.MERGE})
     private List<BookItem> bookItems;

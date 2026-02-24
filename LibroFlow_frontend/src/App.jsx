@@ -13,6 +13,7 @@ import AccessDenied from "./page/admin/AccesDenied";
 import ProfilePage from "./page/profile/Profile";
 import { AuthProvider } from "./contex/AuthContext";
 import UsersList from "./page/user/UsersList";
+import BookDetails from "./page/book-details/BookDetails";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/acces-denied" element={<AccessDenied />} />
             <Route path="/" element={<HomePage />} />
+            <Route path="/book/:id" element={<BookDetails />} />
 
             <Route element={<AdminRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />

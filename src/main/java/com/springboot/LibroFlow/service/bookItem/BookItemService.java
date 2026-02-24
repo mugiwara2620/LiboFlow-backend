@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -35,7 +36,7 @@ public class BookItemService implements IBookItemService {
 
 
     @Override
-    public BookItemDto addBookToMyList(Long myId, Long bookId) {
+    public BookItemDto addBookToMyList(Long myId, Long bookId) throws IOException {
         BookItem bookItem = new BookItem();
         Book book = bookService.getBookById(bookId);
         User user = userBookService.getUserById(myId);

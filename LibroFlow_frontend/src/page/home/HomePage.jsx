@@ -1,21 +1,11 @@
 import { useEffect, useState } from "react";
 import { Menu, Search, Loader2, AlertCircle, BookOpen } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
-import {
-  Icon,
-  X,
-  LayoutDashboard,
-  Users,
-  Settings,
-  LogOut,
-} from "lucide-react";
 import { useAuth } from "../../contex/AuthContext";
 import axiosInstance from "../../utils/axiosInstance";
-import auth from "../../util/auth";
 import SideBar from "../../components/side-bar/SideBar";
 export default function LibraryPage() {
   const navigate = useNavigate();
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const { logout, isAdmin } = useAuth();
 
   const [author, setAuthor] = useState("");
@@ -38,7 +28,7 @@ export default function LibraryPage() {
       );
       setBooks(response.data.data);
       setAuth(localStorage.getItem("token") !== null);
-
+      console.log(response);
       setLoading(false);
     } catch (err) {
       setError("Failed to load books.");
@@ -48,7 +38,6 @@ export default function LibraryPage() {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    console.log(e);
     try {
       setLoading(true);
       setError("");
@@ -56,7 +45,6 @@ export default function LibraryPage() {
         const response = await axiosInstance.get(
           `http://localhost:8080/api/v1/user/book/author/${author}`,
         );
-        console.log(response);
         setBooks(response.data.data);
       } else {
         fetchAllBooks();
@@ -71,10 +59,11 @@ export default function LibraryPage() {
     }
   };
 
-  const deleteBook = (author, title) => {
-    setBooks((prev) =>
-      prev.filter((b) => !(b.author === author && b.title === title)),
+  const deleteBook = async (author, title) => {
+    await axiosInstance.delete(
+      `http://localhost:8080/api/v1/admin/book/delete/${author}/${title}`,
     );
+    await fetchAllBooks();
   };
 
   const handleSideBar = () => {
@@ -98,21 +87,21 @@ export default function LibraryPage() {
       )}
 
       {/* ================= HEADER ================= */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
+      <header className="sticky  top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
         <div className="px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* LEFT */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-5">
               {isAuth && (
                 <button
                   onClick={handleSideBar}
-                  className="p-2 rounded-xl text-gray-600 hover:bg-gray-100 transition lg:hidden"
+                  className="p-2 rounded-xl -ml-4 text-gray-600 hover:bg-gray-100 transition xl:hidden"
                 >
                   <Menu size={22} />
                 </button>
               )}
 
-              <h1 className="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-3xl sm:text-3xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 LibroFlow
               </h1>
             </div>
@@ -130,12 +119,11 @@ export default function LibraryPage() {
                 <input
                   value={author}
                   onChange={(e) => {
-                    console.log(e.target.value);
                     setAuthor(e.target.value);
                   }}
                   type="text"
                   placeholder="Search by author..."
-                  className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 outline-none transition"
+                  className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-md focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 outline-none transition"
                 />
                 {/* <button type="submit">s</button> */}
               </form>
@@ -159,14 +147,14 @@ export default function LibraryPage() {
                 <>
                   <button
                     onClick={() => navigate("/login")}
-                    className="hidden sm:inline-flex px-4 py-2 text-sm font-semibold text-gray-600 hover:text-indigo-600 transition"
+                    className="hidden sm:inline-flex px-4 py-2 text-lg font-semibold text-gray-600 hover:text-indigo-600 transition"
                   >
                     Login
                   </button>
 
                   <button
                     onClick={() => navigate("/signup")}
-                    className="px-4 py-2 text-sm font-semibold rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow hover:shadow-lg hover:scale-[1.02] active:scale-95 transition-all"
+                    className="px-4 py-2 text-lg font-semibold rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow hover:shadow-lg hover:scale-[1.02] active:scale-95 transition-all"
                   >
                     Sign Up
                   </button>
@@ -221,14 +209,21 @@ export default function LibraryPage() {
             {books.map((book, idx) => (
               <div
                 key={idx}
-                className="group bg-white border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
+                className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
               >
                 {/* Cover */}
-                <div className="aspect-[3/4] w-full bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl mb-4 flex items-center justify-center relative overflow-hidden">
-                  <BookOpen
-                    size={36}
-                    className="text-indigo-200 group-hover:opacity-20 transition-opacity"
-                  />
+                <div className="aspect-[3/4] group w-full bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl mb-4 flex items-center justify-center relative overflow-hidden">
+                  {!book.image ? (
+                    <BookOpen
+                      size={36}
+                      className="text-indigo-200 group-hover:opacity-20 transition-opacity"
+                    />
+                  ) : (
+                    <img
+                      src={`data:image/png;base64,${book.image}`}
+                      className="object-cover w-full h-full"
+                    />
+                  )}
 
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 bg-indigo-600/90 flex flex-col items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition duration-300 p-4">
@@ -253,13 +248,22 @@ export default function LibraryPage() {
                 </div>
 
                 {/* Info */}
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900 text-sm mb-1 line-clamp-1 group-hover:text-indigo-600 transition">
-                    {book.title}
-                  </h3>
-                  <p className="text-xs text-gray-500 truncate uppercase tracking-wide">
-                    {book.author}
-                  </p>
+                <div className="flex items-center gap-15">
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-gray-900 text-md line-clamp-1 group-hover:text-indigo-600 transition">
+                      {book.title}
+                    </h3>
+                    <p className="text-xs text-gray-500 truncate uppercase tracking-wide">
+                      {book.author}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => navigate(`/book/${book.id}`)}
+                    className="text-sm font-semibold text-indigo-600 hover:underline ml-3 whitespace-nowrap"
+                  >
+                    Details
+                  </button>
                 </div>
               </div>
             ))}

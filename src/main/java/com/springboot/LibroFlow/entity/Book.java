@@ -15,4 +15,8 @@ public class Book {
     private String author;
     private String pages;
     private String description;
+
+    @OneToOne(mappedBy = "book",cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private Image image;
 }
