@@ -7,4 +7,21 @@ export default defineConfig({
   plugins: [react(),
     tailwindcss()
   ],
+  define: {
+    // This provides the 'global' variable that sockjs-client expects
+    global: 'window',
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/ws': {
+        target: 'http://localhost:8080',
+        ws: true,
+      },
+    },
+  },
 })

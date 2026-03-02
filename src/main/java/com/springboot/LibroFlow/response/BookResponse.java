@@ -12,14 +12,16 @@ public class BookResponse {
     private final String description;
     private final String pages;
     private final String image;
+    private final String username;
 
 
-    public BookResponse(String title, String author, String description, String pages, String image) {
+    public BookResponse(String title, String author, String description, String pages, String image, String username) {
 
         this.title = title;
         this.author = author;
         this.description = description;
         this.pages = pages;
         this.image = image;
+        this.username = username;
     }
 }

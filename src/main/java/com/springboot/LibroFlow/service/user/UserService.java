@@ -7,6 +7,7 @@ import com.springboot.LibroFlow.repository.UserRepository;
 import com.springboot.LibroFlow.service.bookItem.BookItemService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsPasswordService;
@@ -23,6 +24,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    @Lazy
     private final BookItemService bookItemService;
 
     @Override
@@ -34,6 +36,15 @@ public class UserService implements UserDetailsService {
                 .password(user.getPassword())
                 .authorities(authorities)
                 .build();
+    }
+
+    public UserDto getUserDetailsById(Long id) throws UsernameNotFoundException {
+        UserDto user =new UserDto();
+        User u =userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("User not found"));
+        user.setEmail(u.getEmail());
+        user.setLastName(u.getLastName());
+        user.setFirstName(u.getFirstName());
+        return user;
     }
     public boolean isUserNameValid(String username) {
         return userRepository.findByEmail(username) !=null ;

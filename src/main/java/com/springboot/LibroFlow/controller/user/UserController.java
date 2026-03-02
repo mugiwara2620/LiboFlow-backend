@@ -4,6 +4,7 @@ import com.springboot.LibroFlow.dto.UserDto;
 import com.springboot.LibroFlow.entity.User;
 import com.springboot.LibroFlow.enums.Role;
 import com.springboot.LibroFlow.response.ApiResponse;
+import com.springboot.LibroFlow.service.user.UserBookService;
 import com.springboot.LibroFlow.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/api/v1/user")
 public class UserController {
 
     public final UserService userService;
@@ -23,24 +24,15 @@ public class UserController {
 //    public ResponseEntity<String> user() {
 //        return ResponseEntity.ok().body("Hi user!");
 //    }
-    @GetMapping("/users/all")
-    public ResponseEntity<ApiResponse> getAllUser() {
-        try{
-            List<UserDto> users = userService.getAllUsers().stream().map(userService::convertUserToUserDto).toList();
 
-            return ResponseEntity.ok().body(new ApiResponse(users,"Getting all users successfully")) ;
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse(e.getMessage(),"Getting all users failed")) ;
+
+    @GetMapping("/{username}")
+    public ResponseEntity<ApiResponse> getUser(@PathVariable("username") String username) {
+        try{
+            return ResponseEntity.ok().body(new ApiResponse(userService.loadUserByUsername(username),"User found"));
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(),"User Not Found"));
         }
     }
 
-    @PostMapping("/change/user-role/{email}")
-    public ResponseEntity<ApiResponse> changeUserRole(@PathVariable String email, @RequestBody List<String> roles) {
-        try{
-            UserDetails userDetails = userService.changeRole(email,roles);
-            return ResponseEntity.ok().body(new ApiResponse(userDetails,"Changing role successfully"));
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse(e.getMessage(),"Changing role failed")) ;
-        }
-    }
 }

@@ -14,6 +14,7 @@ import ProfilePage from "./page/profile/Profile";
 import { AuthProvider } from "./contex/AuthContext";
 import UsersList from "./page/user/UsersList";
 import BookDetails from "./page/book-details/BookDetails";
+import ChatRoom from "./page/chat/ChatRoom";
 
 function App() {
   return (
@@ -26,6 +27,8 @@ function App() {
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/acces-denied" element={<AccessDenied />} />
             <Route path="/" element={<HomePage />} />
+            <Route path="/chatRoom/:usernameBook" element={<ChatRoom />} />
+
             <Route path="/book/:id" element={<BookDetails />} />
 
             <Route element={<AdminRoute />}>

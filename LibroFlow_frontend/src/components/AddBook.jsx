@@ -3,15 +3,16 @@ import axios from "axios";
 import SideBar from "./side-bar/SideBar";
 import AdminHeader from "./header/AdminHeader";
 import { BookOpen, UploadCloud, X } from "lucide-react";
+import { useAuth } from "../contex/AuthContext";
 
 const AddBook = () => {
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     title: "",
     author: "",
     pages: "",
     description: "",
   });
-
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -49,6 +50,7 @@ const AddBook = () => {
       multipartData.append("author", formData.author);
       multipartData.append("pages", formData.pages);
       multipartData.append("description", formData.description);
+      multipartData.append("username", user.sub);
 
       if (selectedFile) {
         multipartData.append("file", selectedFile);

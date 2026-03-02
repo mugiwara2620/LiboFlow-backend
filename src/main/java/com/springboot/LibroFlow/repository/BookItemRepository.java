@@ -9,4 +9,8 @@ public interface BookItemRepository extends JpaRepository<BookItem, Long> {
     BookItem findByUserIdAndBookId(Long myId, Long bookId);
 
     List<BookItem> findAllByUserId(Long userId);
+
+    List<BookItem> findAllByBookAuthor(String author);
+
+    List<Object> findByBookId(Long id);
 }

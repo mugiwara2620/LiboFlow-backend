@@ -23,7 +23,6 @@ public class OneToOneChat {
     @JoinColumn(name = "student_two_id")
     private User studentTwo;
 
-    // mappedBy refers to the "chat" field in the Message class
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Message> messages = new ArrayList<>();
+
 }
+//

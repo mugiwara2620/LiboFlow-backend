@@ -1,20 +1,27 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
+import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
+  const [userDetails, setUserDetails] = useState(null);
   const [loading, setLoading] = useState(true); // 👈 important
 
-  const handleLogin = (jwt) => {
+  const handleLogin = async (jwt) => {
     const decoded = jwtDecode(jwt);
-
     setToken(jwt);
     setUser(decoded);
-    console.log(decoded);
+
     localStorage.setItem("token", jwt);
+    const response = await axiosInstance.get(
+      `http://localhost:8080/api/v1/user/${decoded.sub}`,
+    );
+
+    setUserDetails(response.data.data);
   };
 
   useEffect(() => {
@@ -41,6 +48,7 @@ export function AuthProvider({ children }) {
       value={{
         token,
         user,
+        userDetails,
         isAuthenticated,
         isAdmin,
         handleLogin,

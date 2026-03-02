@@ -18,6 +18,7 @@ const BookDetails = () => {
       try {
         const res = await axiosInstance.get(`/api/v1/book/${id}`);
         setBook(res.data.data);
+        console.log(res.data.data);
       } catch (err) {
         console.error("Error fetching book:", err);
       } finally {

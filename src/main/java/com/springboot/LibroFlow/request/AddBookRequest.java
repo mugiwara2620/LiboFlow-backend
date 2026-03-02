@@ -12,4 +12,5 @@ public class AddBookRequest {
     private String pages;
     private String description;
     private MultipartFile file;
+    private String username;
 }

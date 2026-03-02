@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import FileText from "./FileText";
 import {
   BookOpen,
@@ -144,10 +145,13 @@ const BookDetailsComponent = ({ book }) => {
               <Share2 size={20} />
               Request Exchange
             </button>
-            <button className="px-8 py-4 border-2 border-gray-100 text-gray-600 font-bold rounded-2xl hover:bg-gray-50 hover:border-indigo-100 hover:text-indigo-600 transition-all flex items-center justify-center gap-2">
+            <NavLink
+              to={`/chatRoom/${book.username}`}
+              className="px-8 py-4 border-2 border-gray-100 text-gray-600 font-bold rounded-2xl hover:bg-gray-50 hover:border-indigo-100 hover:text-indigo-600 transition-all flex items-center justify-center gap-2"
+            >
               <MessageSquare size={20} />
               Chat with Student
-            </button>
+            </NavLink>
           </div>
         </div>
       </div>

@@ -21,7 +21,8 @@ public class Message {
     private User sender;
 
     @ManyToOne
-    @JoinColumn(name = "chat_id") // Link message to the chat container
-    private OneToOneChat chat;
+    @JoinColumn(name = "receiver_id")
+    private User receiver;
 
-    private LocalDateTime timestamp = LocalDateTime.now();}
+    private LocalDateTime timestamp = LocalDateTime.now();
+}

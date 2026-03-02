@@ -7,6 +7,6 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class SendMessageRequest {
     private String message;
-    private String senderId;
-    private String recieverId;
+    private String username;
+    private String recievername;
 }

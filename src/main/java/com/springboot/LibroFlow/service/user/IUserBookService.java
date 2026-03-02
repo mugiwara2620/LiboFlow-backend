@@ -10,4 +10,5 @@ public interface IUserBookService {
     void finishReading(Long myId, Long bookId);
     User getUserById(Long userId);
 
+    User getUserByUserName(String username);
 }

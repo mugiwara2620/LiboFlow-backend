@@ -4,6 +4,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import SideBar from "../../components/side-bar/SideBar";
 import MainHeader from "../../components/header/MainHeader";
 import BookCover from "../../components/home/BookCover";
+import { useAuth } from "../../contex/AuthContext";
 export default function LibraryPage() {
   const [author, setAuthor] = useState("");
   const [books, setBooks] = useState([]);
@@ -11,6 +12,9 @@ export default function LibraryPage() {
   const [error, setError] = useState(null);
   const [isAuth, setAuth] = useState(true); // simulate auth
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const { userDetails } = useAuth();
+  console.log(userDetails);
   useEffect(() => {
     fetchAllBooks();
   }, []);

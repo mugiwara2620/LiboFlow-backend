@@ -25,6 +25,7 @@ public class BookService implements IBookService {
     private BookDto convertBookToBookDto(Book book) throws IOException {
         BookDto bookDto = new BookDto();
         bookDto.setId(book.getId());
+        bookDto.setUsername(book.getUsername());
         bookDto.setAuthor(book.getAuthor());
         bookDto.setTitle(book.getTitle());
         bookDto.setDescription(book.getDescription());
@@ -46,6 +47,7 @@ public class BookService implements IBookService {
         newBook.setTitle(request.getTitle());
         bookRepository.save(newBook);
         imageService.uploadImage(request.getFile(),newBook.getId());
+        newBook.setUsername(request.getUsername());
         Book savedBook = bookRepository.save(newBook);
         return convertBookToBookDto(savedBook);
     }
@@ -97,7 +99,8 @@ public class BookService implements IBookService {
                 book.getAuthor(),
                 book.getDescription(),
                 book.getPages(),
-                imageService.downloadImage(book.getImage().getImageData())
+                imageService.downloadImage(book.getImage().getImageData()
+                ), book.getUsername()
         );
     }
     @Override

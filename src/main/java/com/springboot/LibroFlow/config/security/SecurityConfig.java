@@ -43,8 +43,9 @@ public class SecurityConfig {
                                 sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth->auth
-                            .requestMatchers("/api/v1/auth/**","/home","/api/v1/all","/api/v1/book/*").permitAll()
+                            .requestMatchers("/api/v1/auth/**","/ws/**","/home","/api/v1/all","/api/v1/book/*").permitAll()
                         .requestMatchers("/api/v1/admin/**").hasAuthority(Role.ADMIN.name())
+//                        .requestMatchers("/api/v1/")
                         .requestMatchers("/api/v1/user/**").hasAnyAuthority(Role.ADMIN.name(),Role.USER.name())
                         .anyRequest().authenticated()
 
@@ -66,9 +67,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-        configuration.setAllowedMethods(List.of("GET","POST","PUT","DELETE"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Added OPTIONS
         configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type")); // Be explicit
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

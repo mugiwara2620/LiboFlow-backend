@@ -8,5 +8,5 @@ import java.time.LocalDateTime;
 public class MessageDto {
     private String message;
     private LocalDateTime timestamp;
-    private  String studentEmail;
+    private String senderName;
 }

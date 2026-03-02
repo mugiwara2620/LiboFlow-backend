@@ -1,12 +1,12 @@
 package com.springboot.LibroFlow.service.user;
 
 import com.springboot.LibroFlow.dto.BookItemDto;
-import com.springboot.LibroFlow.entity.BookItem;
 import com.springboot.LibroFlow.entity.User;
 import com.springboot.LibroFlow.repository.BookItemRepository;
 import com.springboot.LibroFlow.repository.UserRepository;
 import com.springboot.LibroFlow.service.book.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,6 +38,12 @@ public class UserBookService implements IUserBookService {
 
     @Override
     public User getUserById(Long userId) {
-        return userRepository.findById(userId).orElseGet(null);
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User with ID " + userId + " not found"));
+    }
+
+    @Override
+    public User getUserByUserName(String username){
+        return userRepository.findByEmail(username);
     }
 }
