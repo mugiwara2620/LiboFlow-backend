@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import axiosInstance from "../utils/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
@@ -36,6 +37,7 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     localStorage.removeItem("token");
+
     setToken(null);
     setUser(null);
   };

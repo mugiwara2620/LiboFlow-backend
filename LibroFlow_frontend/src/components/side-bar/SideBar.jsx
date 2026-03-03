@@ -25,11 +25,11 @@ const SideBar = ({
   const { logout, isAdmin } = useAuth();
   const navigate = useNavigate();
   const handleLogoutFunction = () => {
+    navigate("/");
     logout();
     setIsSidebarOpen(false);
     setAuth(false);
     setShowLogoutModal(true);
-    navigate("/");
   };
   return (
     <div>
